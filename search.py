@@ -23,8 +23,6 @@ class SearchError:
 
 class YaSearch:
     RESULTS_PER_PAGE = 10
-    _api_user = ''
-    _api_key = ''
 
     def _xml_extract_helper(self, node):
         result = ''
@@ -83,7 +81,6 @@ class YaSearch:
             'page' : unicode(page), 'query' : query
         }
         full_query = u'http://xmlsearch.yandex.ru/xmlsearch?' + urllib.urlencode(params)
-        print full_query
         xml = urllib2.urlopen(full_query).read()
         dom = minidom.parseString(xml)
         items = []
