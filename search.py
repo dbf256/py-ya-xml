@@ -62,7 +62,10 @@ class YaSearch:
         errorNodes = dom.getElementsByTagName('error')
         if len(errorNodes):
             description = errorNodes[0].childNodes[0].nodeValue
-            code = errorNodes[0].attributes['code'].value
+            try: # sometimes error code is not available in XML
+                code = errorNodes[0].attributes['code'].value
+            except Exception:
+                code = 0
             error = SearchError(code, description)
         return error
 
