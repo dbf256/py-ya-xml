@@ -24,6 +24,16 @@ class SearchError:
 class YaSearch:
     RESULTS_PER_PAGE = 10
 
+    REQUEST_TEMPLATE = """<?xml version='1.0' encoding='utf-8'?>
+        <request>
+            <query>%s</query>
+            <page>%s</page>
+            <maxpassages>0</maxpassages>
+            <groupings>
+		        <groupby mode="flat"/>
+	        </groupings>
+        </request>"""
+
     def _xml_extract_helper(self, node):
         result = ''
         for child in node.childNodes:
@@ -80,11 +90,12 @@ class YaSearch:
 
         page -= 1
         query = unicode(query) + request_suffix
-        params = {'user' : self._api_user, 'key' : self._api_key,
-            'page' : unicode(page), 'query' : query
-        }
-        full_query = u'http://xmlsearch.yandex.ru/xmlsearch?' + urllib.urlencode(params)
-        xml = urllib2.urlopen(full_query).read()
+        params = {'user' : self._api_user, 'key' : self._api_key}
+        search_url = u'http://xmlsearch.yandex.ru/xmlsearch?' + urllib.urlencode(params)
+        post_data = self.REQUEST_TEMPLATE % (query.encode('utf-8'), str(page))
+        req = urllib2.Request(search_url, post_data)
+        response = urllib2.urlopen(req)
+        xml = response.read()
         dom = minidom.parseString(xml)
         items = []
         pages = 0
