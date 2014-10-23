@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import sys
-from search import YaSearch
+
+from pyyaxml.search import YaSearch
+
 
 # Put your Yandex.XML credentials here 
 API_USER = ''
