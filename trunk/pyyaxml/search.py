@@ -91,7 +91,7 @@ class YaSearch:
         page -= 1
         query = unicode(query) + request_suffix
         params = {'user' : self._api_user, 'key' : self._api_key}
-        search_url = u'https://xmlsearch.yandex.ru/xmlsearch?' + urllib.urlencode(params)
+        search_url = u'https://yandex.ru/search/xml?' + urllib.urlencode(params)
         post_data = self.REQUEST_TEMPLATE % (query.encode('utf-8'), str(page))
         req = urllib2.Request(search_url, post_data)
         response = urllib2.urlopen(req)
