@@ -4,7 +4,7 @@ py-ya-xml - simple python wrapper for Yandex.XML search service (http://xml.yand
 
 Install
 ------------------------
-No packages are available now, just put search.py whereever you want.
+pip install pyyaxml
 
 Usage
 ------------------------
@@ -17,5 +17,4 @@ and 'found_human' string that you need to display at result page according to Ya
 
 See also
 ------------------------
-http://python.org/
 http://xml.yandex.ru/
