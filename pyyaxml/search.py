@@ -35,7 +35,7 @@ class YaSearch:
         </request>"""
 
     BASE_URL = u'https://yandex.{}/search/xml?'
-    VALID_DOMAINS = {'ru', 'tr', 'com'}
+    VALID_DOMAINS = {'ru', 'com.tr', 'com'}
 
     def _xml_extract_helper(self, node):
         result = ''
