@@ -34,6 +34,9 @@ class YaSearch:
 	        </groupings>
         </request>"""
 
+    BASE_URL = u'https://yandex.{}/search/xml?'
+    VALID_DOMAINS = {'ru', 'com.tr', 'com'}
+
     def _xml_extract_helper(self, node):
         result = ''
         for child in node.childNodes:
@@ -43,9 +46,12 @@ class YaSearch:
                 result += child.childNodes[0].nodeValue
         return result
 
-    def __init__(self, api_user, api_key):
+    def __init__(self, api_user, api_key, domain='ru'):
         self._api_user = api_user
         self._api_key = api_key
+        if domain not in self.VALID_DOMAINS:
+            raise ValueError('Invalid domain. Valid domains are {}'.format(', '.join(self.VALID_DOMAINS)))
+        self._url = self.BASE_URL.format(domain)
 
     def _get_result_size(self, dom):
         for foundNode in dom.getElementsByTagName('found'):
@@ -91,7 +97,7 @@ class YaSearch:
         page -= 1
         query = unicode(query) + request_suffix
         params = {'user' : self._api_user, 'key' : self._api_key}
-        search_url = u'https://yandex.ru/search/xml?' + urllib.urlencode(params)
+        search_url = self._url + urllib.urlencode(params)
         post_data = self.REQUEST_TEMPLATE % (query.encode('utf-8'), str(page))
         req = urllib2.Request(search_url, post_data)
         response = urllib2.urlopen(req)
