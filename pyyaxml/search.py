@@ -92,12 +92,12 @@ class YaSearch:
     def search(self, query, page=1, site=None, max_page_num=100):
         request_suffix = ''
         if site:
-            request_suffix += (' site:%s' % site)
+            request_suffix += (u' site:%s' % site)
 
         page -= 1
         query = unicode(query) + request_suffix
         params = {'user' : self._api_user, 'key' : self._api_key}
-        search_url = self._url + urllib.urlencode(params)
+        search_url = self._url.encode('utf-8') + urllib.urlencode(params)
         post_data = self.REQUEST_TEMPLATE % (query.encode('utf-8'), str(page))
         req = urllib2.Request(search_url, post_data)
         response = urllib2.urlopen(req)
