@@ -91,19 +91,18 @@ class YaSearch:
             return foundNode.childNodes[0].nodeValue
 
     def search(self, query, page=1, site=None, max_page_num=100):
-        request_suffix = ''
+        request_suffix = u''
         if site:
             request_suffix += (u' site:%s' % site)
 
         page -= 1
         params = {'user': self._api_user, 'key': self._api_key}
+        query = query + request_suffix
 
         if PY2:
-            query = query + u(request_suffix)
             search_url = self._url.encode('utf-8') + urllib.parse.urlencode(params)
             post_data = self.REQUEST_TEMPLATE % (query.encode('utf-8'), str(page))
         else:
-            query = query + request_suffix
             search_url = self._url + urllib.parse.urlencode(params)
             post_data = (self.REQUEST_TEMPLATE % (query.encode('utf-8'), str(page))).encode('utf-8')
 
