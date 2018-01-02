@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Coded by Alexey Moskvin
-import urllib2, urllib
+from six.moves import urllib
 from xml.dom import minidom
+from six import PY2, u
 
 class SearchResultItem:
     def __init__(self, url, title, snippet):
@@ -95,12 +96,19 @@ class YaSearch:
             request_suffix += (u' site:%s' % site)
 
         page -= 1
-        query = unicode(query) + request_suffix
-        params = {'user' : self._api_user, 'key' : self._api_key}
-        search_url = self._url.encode('utf-8') + urllib.urlencode(params)
-        post_data = self.REQUEST_TEMPLATE % (query.encode('utf-8'), str(page))
-        req = urllib2.Request(search_url, post_data)
-        response = urllib2.urlopen(req)
+        params = {'user': self._api_user, 'key': self._api_key}
+
+        if PY2:
+            query = query + u(request_suffix)
+            search_url = self._url.encode('utf-8') + urllib.parse.urlencode(params)
+            post_data = self.REQUEST_TEMPLATE % (query.encode('utf-8'), str(page))
+        else:
+            query = query + request_suffix
+            search_url = self._url + urllib.parse.urlencode(params)
+            post_data = (self.REQUEST_TEMPLATE % (query.encode('utf-8'), str(page))).encode('utf-8')
+
+        req = urllib.request.Request(search_url, post_data)
+        response = urllib.request.urlopen(req)
         xml = response.read()
         dom = minidom.parseString(xml)
         items = []
