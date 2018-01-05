@@ -104,7 +104,7 @@ class YaSearch:
             post_data = self.REQUEST_TEMPLATE % (query.encode('utf-8'), str(page))
         else:
             search_url = self._url + urllib.parse.urlencode(params)
-            post_data = (self.REQUEST_TEMPLATE % (query.encode('utf-8'), str(page))).encode('utf-8')
+            post_data = (self.REQUEST_TEMPLATE % (query, str(page))).encode('utf-8')
 
         req = urllib.request.Request(search_url, post_data)
         response = urllib.request.urlopen(req)
