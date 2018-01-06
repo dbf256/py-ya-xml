@@ -17,4 +17,4 @@ class SearchTest(unittest.TestCase):
         y.search(u'питон', page=1)
         y.search(u'питон', page=1, site='site.com')
         y.search(u'питон', page=1, site='site.com', max_page_num=5)
-
+        y.search(u'питон', page=1, max_page_num=5, sort_by='tm', order='descending')

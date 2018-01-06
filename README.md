@@ -24,5 +24,5 @@ and 'found_human' string that you need to display at result page according to Ya
 
 See also
 ------------------------
-http://xml.yandex.ru/
-https://tech.yandex.ru/xml/
+- http://xml.yandex.ru/
+- https://tech.yandex.ru/xml/
