@@ -2,7 +2,7 @@
 # Coded by Alexey Moskvin
 from six.moves import urllib
 from xml.dom import minidom
-from six import PY2, u
+from six import PY2
 
 class SearchResultItem:
     def __init__(self, url, title, snippet):
@@ -29,6 +29,7 @@ class YaSearch:
         <request>
             <query>%s</query>
             <page>%s</page>
+            <sortby order="%s" priority="no">%s</sortby>
             <maxpassages>0</maxpassages>
             <groupings>
 		        <groupby mode="flat"/>
@@ -90,7 +91,11 @@ class YaSearch:
         for foundNode in dom.getElementsByTagName('found-human'):
             return foundNode.childNodes[0].nodeValue
 
-    def search(self, query, page=1, site=None, max_page_num=100):
+    """
+    Call to search API. Check https://tech.yandex.ru/xml/doc/dg/concepts/response_request-docpage/ to see possible
+    values.    
+    """
+    def search(self, query, page=1, site=None, max_page_num=100, sort_by='rlv', order='descending'):
         request_suffix = u''
         if site:
             request_suffix += (u' site:%s' % site)
@@ -101,10 +106,10 @@ class YaSearch:
 
         if PY2:
             search_url = self._url.encode('utf-8') + urllib.parse.urlencode(params)
-            post_data = self.REQUEST_TEMPLATE % (query.encode('utf-8'), str(page))
+            post_data = self.REQUEST_TEMPLATE % (query.encode('utf-8'), str(page), order.encode('utf-8'), sort_by.encode('utf-8'))
         else:
             search_url = self._url + urllib.parse.urlencode(params)
-            post_data = (self.REQUEST_TEMPLATE % (query, str(page))).encode('utf-8')
+            post_data = (self.REQUEST_TEMPLATE % (query, str(page), order, sort_by)).encode('utf-8')
 
         req = urllib.request.Request(search_url, post_data)
         response = urllib.request.urlopen(req)
