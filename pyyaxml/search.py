@@ -11,10 +11,10 @@ class SearchResultItem:
         self.snippet = snippet
 
 class SearchResults:
-    def __init__(self, items, pages, found_human, error=None):
+    def __init__(self, items, pages, num_results, error=None):
         self.items = items
         self.pages = pages
-        self.found_human = found_human
+        self.num_results = num_results
         self.error = error
 
 class SearchError:
@@ -87,9 +87,12 @@ class YaSearch:
             error = SearchError(code, description)
         return error
 
-    def _get_found_human(self, dom):
-        for foundNode in dom.getElementsByTagName('found-human'):
-            return foundNode.childNodes[0].nodeValue
+    def _get_num_results(self, dom):
+        if dom.getElementsByTagName('found') == []:
+            num_results = 0
+        else:
+            num_results = int(dom.getElementsByTagName('found')[2].childNodes[0].nodeValue)
+        return num_results
 
     """
     Call to search API. Check https://tech.yandex.ru/xml/doc/dg/concepts/response_request-docpage/ to see possible
@@ -117,19 +120,19 @@ class YaSearch:
         dom = minidom.parseString(xml)
         items = []
         pages = 0
-        found_human = ''
+        num_results = ''
         error = self._get_error(dom)
         if error is not None:
-            search_results = SearchResults(items, pages, found_human, error)
+            search_results = SearchResults(items, pages, num_results, error)
             return search_results
 
         items = self._get_items(dom)
         result_size = self._get_result_size(dom)
-        found_human = self._get_found_human(dom)
+        num_results = self._get_num_results(dom)
 
         pages = result_size / self.RESULTS_PER_PAGE
         if pages > max_page_num:
             pages = max_page_num
 
-        search_results = SearchResults(items, pages, found_human)
+        search_results = SearchResults(items, pages, num_results)
         return search_results
