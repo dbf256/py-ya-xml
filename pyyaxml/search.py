@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# Coded by Alexey Moskvin
 from six.moves import urllib
 from xml.dom import minidom
 from six import PY2
@@ -77,23 +76,22 @@ class YaSearch:
 
     def _get_error(self, dom):
         error = None
-        errorNodes = dom.getElementsByTagName('error')
-        if len(errorNodes):
-            description = errorNodes[0].childNodes[0].nodeValue
+        error_nodes = dom.getElementsByTagName('error')
+        if len(error_nodes):
+            description = error_nodes[0].childNodes[0].nodeValue
             try: # sometimes error code is not available in XML
-                code = errorNodes[0].attributes['code'].value
+                code = error_nodes[0].attributes['code'].value
             except Exception:
                 code = 0
             error = SearchError(code, description)
         return error
 
     def _get_found_human(self, dom):
-        for foundNode in dom.getElementsByTagName('found-human'):
-            return foundNode.childNodes[0].nodeValue
+        for found_node in dom.getElementsByTagName('found-human'):
+            return found_node.childNodes[0].nodeValue
 
     """
-    Call to search API. Check https://tech.yandex.ru/xml/doc/dg/concepts/response_request-docpage/ to see possible
-    values.    
+    Call to search API. Check https://yandex.ru/dev/xml/doc/dg/concepts/post-request.html to see possible values.    
     """
     def search(self, query, page=1, site=None, max_page_num=100, sort_by='rlv', order='descending'):
         request_suffix = u''
