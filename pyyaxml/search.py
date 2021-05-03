@@ -44,8 +44,8 @@ class YaSearch:
             if not len(child.childNodes):
                 result += child.nodeValue
             else:
-                result += child.childNodes[0].nodeValue
-        return result
+                result += self._xml_extract_helper(child)
+        return result.strip()
 
     def __init__(self, api_user, api_key, domain='ru'):
         self._api_user = api_user
@@ -70,7 +70,7 @@ class YaSearch:
                 if child.nodeName == 'title':
                     title = self._xml_extract_helper(child)
                 if child.nodeName == 'passages':
-                    passage = self._xml_extract_helper(child.childNodes[0])
+                    passage = self._xml_extract_helper(child)
             items.append(SearchResultItem(url, title, passage))
         return items
 
