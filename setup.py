@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='pyyaxml',
-      version='0.6.1',
+      version='0.6.2',
       description='Python API to Yandex.XML',
       url='https://github.com/dbf256/py-ya-xml',
       author='Alexey Moskvin',
