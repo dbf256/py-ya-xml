@@ -4,10 +4,11 @@ from xml.dom import minidom
 from six import PY2
 
 class SearchResultItem:
-    def __init__(self, url, title, snippet):
+    def __init__(self, url, title, snippet, modtime):
         self.url = url
         self.title = title
         self.snippet = snippet
+        self.modtime = modtime
 
 class SearchResults:
     def __init__(self, items, pages, found_human, error=None):
@@ -63,7 +64,7 @@ class YaSearch:
     def _get_items(self, dom):
         items = []
         for docNode in dom.getElementsByTagName('doc'):
-            (url, passage, title) = ('', '', '')
+            (url, passage, title, modtime) = ('', '', '', '')
             for child in docNode.childNodes:
                 if child.nodeName == 'url':
                     url = child.childNodes[0].nodeValue
@@ -71,7 +72,9 @@ class YaSearch:
                     title = self._xml_extract_helper(child)
                 if child.nodeName == 'passages':
                     passage = self._xml_extract_helper(child)
-            items.append(SearchResultItem(url, title, passage))
+                if child.nodeName == 'modtime':
+                    modtime = child.childNodes[0].nodeValue
+            items.append(SearchResultItem(url, title, passage, modtime))
         return items
 
     def _get_error(self, dom):
