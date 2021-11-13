@@ -16,7 +16,7 @@ from pyyaxml.search import YaSearch
 y = YaSearch('my_login', 'my_api_key')
 results = y.search('python', page=1)
 for result in results.items:
-    print result.url
+    print(result.url)
 ```
 Don't forget to review https://yandex.ru/legal/xml/. See example.py for working example.
 - Result of the search function contains list of result items (SearchResultItem), number of pages, error (if available)
