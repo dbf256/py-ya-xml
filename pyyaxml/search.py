@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from six.moves import urllib
 from xml.dom import minidom
 from six import PY2
@@ -23,7 +22,7 @@ class SearchError:
         self.description = description
 
 class YaSearch:
-    RESULTS_PER_PAGE = 10
+    RESULTS_PER_PAGE = 100
 
     REQUEST_TEMPLATE = """<?xml version='1.0' encoding='utf-8'?>
         <request>
@@ -32,8 +31,8 @@ class YaSearch:
             <sortby order="%s" priority="no">%s</sortby>
             <maxpassages>0</maxpassages>
             <groupings>
-		        <groupby mode="flat"/>
-	        </groupings>
+                <groupby attr="d" mode="deep" groups-on-page="100" docs-in-group="1" curcateg="-1"/>
+            </groupings>
         </request>"""
 
     BASE_URL = u'https://yandex.{}/search/xml?'
@@ -48,9 +47,11 @@ class YaSearch:
                 result += self._xml_extract_helper(child)
         return result.strip()
 
-    def __init__(self, api_user, api_key, domain='ru'):
+    def __init__(self, api_user, api_key, domain='ru', region='213', _filter='moderate'):
         self._api_user = api_user
         self._api_key = api_key
+        self._region = region
+        self._filter = _filter
         if domain not in self.VALID_DOMAINS:
             raise ValueError('Invalid domain. Valid domains are {}'.format(', '.join(self.VALID_DOMAINS)))
         self._url = self.BASE_URL.format(domain)
@@ -94,7 +95,7 @@ class YaSearch:
             return found_node.childNodes[0].nodeValue
 
     """
-    Call to search API. Check https://yandex.ru/dev/xml/doc/dg/concepts/post-request.html to see possible values.    
+    Call to search API. Check https://yandex.ru/dev/xml/doc/dg/concepts/post-request.html to see possible values.
     """
     def search(self, query, page=1, site=None, max_page_num=100, sort_by='rlv', order='descending'):
         request_suffix = u''
@@ -102,7 +103,7 @@ class YaSearch:
             request_suffix += (u' site:%s' % site)
 
         page -= 1
-        params = {'user': self._api_user, 'key': self._api_key}
+        params = {'user': self._api_user, 'key': self._api_key, 'lr': self._region, 'filter': self._filter}
         query = query + request_suffix
 
         if PY2:
