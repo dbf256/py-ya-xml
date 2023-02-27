@@ -5,8 +5,9 @@ from pyyaxml.search import YaSearch
 # Put your Yandex.XML credentials here 
 API_USER = ''
 API_KEY = ''
+LR_S = '213'
 
-y = YaSearch(API_USER, API_KEY)
+y = YaSearch(API_USER, API_KEY, LR_S)
 results = y.search('питон', site='python.su', page=1)
 if results.error is None:
     for result in results.items:
