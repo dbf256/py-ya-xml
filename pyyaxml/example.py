@@ -5,6 +5,8 @@ from pyyaxml.search import YaSearch
 # Put your Yandex.XML credentials here 
 API_USER = ''
 API_KEY = ''
+
+# Put the desired region https://yandex.ru/dev/xml/doc/dg/reference/regions.html
 LR_S = '213'
 
 y = YaSearch(API_USER, API_KEY, LR_S)
