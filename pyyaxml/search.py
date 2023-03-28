@@ -32,8 +32,8 @@ class YaSearch:
             <sortby order="%s" priority="no">%s</sortby>
             <maxpassages>0</maxpassages>
             <groupings>
-		        <groupby mode="flat"/>
-	        </groupings>
+                <groupby mode="flat"/>
+            </groupings>
         </request>"""
 
     BASE_URL = u'https://yandex.{}/search/xml?'
@@ -48,9 +48,10 @@ class YaSearch:
                 result += self._xml_extract_helper(child)
         return result.strip()
 
-    def __init__(self, api_user, api_key, domain='ru'):
+    def __init__(self, api_user, api_key, lr=None, domain='ru'):
         self._api_user = api_user
         self._api_key = api_key
+        self._lr = lr
         if domain not in self.VALID_DOMAINS:
             raise ValueError('Invalid domain. Valid domains are {}'.format(', '.join(self.VALID_DOMAINS)))
         self._url = self.BASE_URL.format(domain)
@@ -102,7 +103,7 @@ class YaSearch:
             request_suffix += (u' site:%s' % site)
 
         page -= 1
-        params = {'user': self._api_user, 'key': self._api_key}
+        params = {'user': self._api_user, 'key': self._api_key, 'lr': self._lr}
         query = query + request_suffix
 
         if PY2:
